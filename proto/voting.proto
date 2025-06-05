@@ -1,6 +1,8 @@
 syntax = "proto3";
 package voting;
 
+import "google/protobuf/empty.proto";
+
 message VoteRequest {
   string voter_id = 1;
   string candidate_id = 2;
@@ -14,4 +16,8 @@ message VoteResponse {
 service VotingService {
   rpc SubmitVote (VoteRequest) returns (VoteResponse);
   rpc QueryResults (google.protobuf.Empty) returns (VoteResults);
+}
+
+message VoteResults {
+  map<string, int32> results = 1; // Ex.: { "CandidatoA": 5, "CandidatoB": 8 }
 }
