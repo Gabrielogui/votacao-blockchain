@@ -1,0 +1,17 @@
+syntax = "proto3";
+package voting;
+
+message VoteRequest {
+  string voter_id = 1;
+  string candidate_id = 2;
+}
+
+message VoteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+service VotingService {
+  rpc SubmitVote (VoteRequest) returns (VoteResponse);
+  rpc QueryResults (google.protobuf.Empty) returns (VoteResults);
+}
