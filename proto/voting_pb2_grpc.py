@@ -51,6 +51,7 @@ class VotingServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def SubmitVote(self, request, context):
+        print(f"📥 Novo cliente enviou voto: Eleitor {request.voter_id} votou em {request.candidate_id}")
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

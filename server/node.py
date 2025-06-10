@@ -26,17 +26,17 @@ class VotingNode(voting_pb2_grpc.VotingServiceServicer):
     def __init__(self):
         self.votes = {}
 
-    def CastVote(self, request, context):
-        candidate = request.candidate
+    def SubmitVote(self, request, context):  # Nome certo
+        candidate = request.candidate_id      # Provavelmente é candidate_id, veja seu .proto
         if candidate in self.votes:
             self.votes[candidate] += 1
         else:
             self.votes[candidate] = 1
-        print(f"Voto recebido para {candidate}")
-        return voting_pb2.VoteResponse(status="Voto registrado com sucesso")
+        print(f"📥 Voto recebido: Eleitor {request.voter_id} votou em {candidate}")
+        return voting_pb2.VoteResponse(message="Voto registrado com sucesso")
 
-    def GetResults(self, request, context):
+    def QueryResults(self, request, context):  # Nome certo
         results = [
-            voting_pb2.Result(candidate=k, votes=v) for k, v in self.votes.items()
+            voting_pb2.Result(candidate_id=k, votes=v) for k, v in self.votes.items()
         ]
-        return voting_pb2.ResultsResponse(results=results)
+        return voting_pb2.VoteResults(results=results)
