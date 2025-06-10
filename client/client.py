@@ -14,10 +14,10 @@ def submit_vote(stub):
     voter_id = input("🆔 Digite seu ID de eleitor: ").strip()
     print("👤 Escolha um candidato:")
     candidates = {
-        1: "Alice",
-        2: "Bruno",
-        3: "Carlos",
-        4: "Daniela"
+        1: "Caio",
+        2: "Gabriel",
+        3: "Luiz",
+        4: "Luiza"
     }
     for cid, name in candidates.items():
         print(f"{cid}. {name}")
@@ -45,7 +45,7 @@ def get_results(stub):
         resp = stub.QueryResults(empty_pb2.Empty())
         print("\n📊 Resultados da votação:")
         for candidate, votes in resp.results.items():
-            print(f"➡️ {candidate}: {votes} voto(s)")
+            print(f"➡️  {candidate}: {votes} voto(s)")
     except grpc.RpcError as e:
         print(f"❌ Erro ao buscar resultados: {e.details()}")
 

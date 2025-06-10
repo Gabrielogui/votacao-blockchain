@@ -36,7 +36,4 @@ class VotingNode(voting_pb2_grpc.VotingServiceServicer):
         return voting_pb2.VoteResponse(message="Voto registrado com sucesso")
 
     def QueryResults(self, request, context):  # Nome certo
-        results = [
-            voting_pb2.Result(candidate_id=k, votes=v) for k, v in self.votes.items()
-        ]
-        return voting_pb2.VoteResults(results=results)
+        return voting_pb2.VoteResults(results=self.votes)
