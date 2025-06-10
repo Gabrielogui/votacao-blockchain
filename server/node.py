@@ -3,6 +3,8 @@ import node_pb2_grpc
 import voting_pb2
 import voting_pb2_grpc
 
+from blockchain.blockchain import Blockchain
+
 
 class NodeService(node_pb2_grpc.NodeServiceServicer):
     def __init__(self, node_id):
@@ -25,15 +27,21 @@ class NodeService(node_pb2_grpc.NodeServiceServicer):
 class VotingNode(voting_pb2_grpc.VotingServiceServicer):
     def __init__(self):
         self.votes = {}
+        self.blockchain = Blockchain()
 
-    def SubmitVote(self, request, context):  # Nome certo
-        candidate = request.candidate_id      # Provavelmente é candidate_id, veja seu .proto
-        if candidate in self.votes:
-            self.votes[candidate] += 1
-        else:
-            self.votes[candidate] = 1
-        print(f"📥 Voto recebido: Eleitor {request.voter_id} votou em {candidate}")
-        return voting_pb2.VoteResponse(message="Voto registrado com sucesso")
+    def SubmitVote(self, request, context):
+        candidate = request.candidate_id
+        voter = request.voter_id
 
-    def QueryResults(self, request, context):  # Nome certo
+        # Armazena o voto no blockchain
+        vote_data = {'voter_id': voter, 'candidate_id': candidate}
+        self.blockchain.add_block(vote_data)
+
+        # Atualiza contagem
+        self.votes[candidate] = self.votes.get(candidate, 0) + 1
+
+        print(f"✅ Voto registrado e salvo no blockchain: {vote_data}")
+        return voting_pb2.VoteResponse(success=True, message="Voto com segurança")
+
+    def QueryResults(self, request, context):
         return voting_pb2.VoteResults(results=self.votes)
