@@ -2,6 +2,19 @@ import hashlib
 import json
 from time import time
 
+from cryptography.fernet import Fernet
+
+# Gere uma vez e salve em arquivo:
+'''key = Fernet.generate_key()
+with open("key.key", "wb") as key_file:
+    key_file.write(key)'''
+
+# Depois, use isso em produção:
+with open("key.key", "rb") as key_file:
+    key = key_file.read()
+
+cipher = Fernet(key)
+
 class Block:
     def __init__(self, index, timestamp, data, previous_hash=''):
         self.index = index
