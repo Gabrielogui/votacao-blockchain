@@ -25,12 +25,12 @@ def serve(port=50051, node_id="Node-1"):
     server.add_insecure_port(f'[::]:{port}')
     server.start()
 
-    print(f"🚀 Servidor {node_id} rodando na porta {port}...")
+    print(f"| Servidor {node_id} rodando na porta {port}...")
     try:
         while True:
             time.sleep(86400)  # Mantém o servidor vivo (1 dia)
     except KeyboardInterrupt:
-        print("\n🛑 Servidor interrompido.")
+        print("\n□ Servidor interrompido.")
         server.stop(0)
 
 

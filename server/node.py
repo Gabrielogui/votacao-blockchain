@@ -35,7 +35,7 @@ class VotingNode(voting_pb2_grpc.VotingServiceServicer):
         # Carrega a chave de criptografia ao iniciar o servidor
         with open("key.key", "rb") as key_file:
             key = key_file.read()
-        self.cipher = Fernet(key)  # agora disponível como self.cipher
+        self.cipher = Fernet(key)  
 
     def SubmitVote(self, request, context):
         candidate = request.candidate_id
@@ -51,7 +51,7 @@ class VotingNode(voting_pb2_grpc.VotingServiceServicer):
         # Atualiza contagem local (não criptografada, apenas para resultados)
         self.votes[candidate] = self.votes.get(candidate, 0) + 1
 
-        print(f"✅ Voto criptografado registrado no blockchain")
+        print(f"V Voto criptografado registrado no blockchain")
         return voting_pb2.VoteResponse(success=True, message="Voto registrado com segurança")
 
     def QueryResults(self, request, context):
@@ -72,6 +72,6 @@ class VotingNode(voting_pb2_grpc.VotingServiceServicer):
                     voter_id, candidate_id = decrypted.split(":")
                     decrypted_votes[candidate_id] = decrypted_votes.get(candidate_id, 0) + 1
                 except Exception as e:
-                    print(f"❌ Erro ao descriptografar voto: {e}")
+                    print(f"X Erro ao descriptografar voto: {e}")
 
         return voting_pb2.VoteResults(results=decrypted_votes)

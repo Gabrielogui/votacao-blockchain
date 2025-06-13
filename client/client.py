@@ -11,7 +11,7 @@ import voting_pb2_grpc
 
 
 def submit_vote(stub):
-    voter_id = input("🆔 Digite seu ID de eleitor: ").strip()
+    voter_id = input("> Digite seu ID de eleitor: ").strip()
     print("👤 Escolha um candidato:")
     candidates = {
         1: "Caio",
@@ -25,19 +25,19 @@ def submit_vote(stub):
     try:
         choice = int(input("Digite o número do candidato: "))
         if choice not in candidates:
-            print("❌ Opção inválida!")
+            print("X Opção inválida!")
             return
         candidate_id = candidates[choice]  # string conforme o seu proto
     except ValueError:
-        print("❌ Entrada inválida!")
+        print("X Entrada inválida!")
         return
 
     try:
         req = voting_pb2.VoteRequest(voter_id=voter_id, candidate_id=candidate_id)
         resp = stub.SubmitVote(req)
-        print(f"✅ {resp.message}")
+        print(f"V {resp.message}")
     except grpc.RpcError as e:
-        print(f"❌ Erro ao enviar voto: {e.details()}")
+        print(f"X Erro ao enviar voto: {e.details()}")
 
 
 def get_results(stub):
@@ -45,9 +45,9 @@ def get_results(stub):
         resp = stub.QueryResults(empty_pb2.Empty())
         print("\n📊 Resultados da votação:")
         for candidate, votes in resp.results.items():
-            print(f"➡️  {candidate}: {votes} voto(s)")
+            print(f"=>  {candidate}: {votes} voto(s)")
     except grpc.RpcError as e:
-        print(f"❌ Erro ao buscar resultados: {e.details()}")
+        print(f"X Erro ao buscar resultados: {e.details()}")
 
 
 def main():
@@ -67,10 +67,10 @@ def main():
             elif opc == '2':
                 get_results(stub)
             elif opc == '3':
-                print("👋 Encerrando cliente...")
+                print("P Encerrando cliente...")
                 break
             else:
-                print("❌ Opção inválida! Tente novamente.")
+                print("X Opção inválida! Tente novamente.")
 
 
 if __name__ == '__main__':
