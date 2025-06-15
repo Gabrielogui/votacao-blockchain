@@ -13,11 +13,20 @@ message VoteResponse {
   string message = 2;
 }
 
-service VotingService {
-  rpc SubmitVote (VoteRequest) returns (VoteResponse);
-  rpc QueryResults (google.protobuf.Empty) returns (VoteResults);
-}
-
 message VoteResults {
   map<string, int32> results = 1; // Ex.: { "CandidatoA": 5, "CandidatoB": 8 }
+}
+
+// Mensagem para propagar blocos entre nós
+message BlockMessage {
+  map<string, string> data = 1;
+}
+
+service VotingService {
+  // Voto normal, criptografado e gravado localmente + broadcast
+  rpc SubmitVote (VoteRequest) returns (VoteResponse);
+  // Consulta resultados (descriptografa a própria cadeia)
+  rpc QueryResults (google.protobuf.Empty) returns (VoteResults);
+  // RPC interno: recebe blocos de outros nós
+  rpc PropagateBlock (BlockMessage) returns (VoteResponse);
 }

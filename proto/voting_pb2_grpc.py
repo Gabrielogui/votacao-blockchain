@@ -45,20 +45,33 @@ class VotingServiceStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=voting__pb2.VoteResults.FromString,
                 _registered_method=True)
+        self.PropagateBlock = channel.unary_unary(
+                '/voting.VotingService/PropagateBlock',
+                request_serializer=voting__pb2.BlockMessage.SerializeToString,
+                response_deserializer=voting__pb2.VoteResponse.FromString,
+                _registered_method=True)
 
 
 class VotingServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def SubmitVote(self, request, context):
-        print(f"📥 Novo cliente enviou voto: Eleitor {request.voter_id} votou em {request.candidate_id}")
-        """Missing associated documentation comment in .proto file."""
+        """Voto normal, criptografado e gravado localmente + broadcast
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def QueryResults(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Consulta resultados (descriptografa a própria cadeia)
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PropagateBlock(self, request, context):
+        """RPC interno: recebe blocos de outros nós
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -75,6 +88,11 @@ def add_VotingServiceServicer_to_server(servicer, server):
                     servicer.QueryResults,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=voting__pb2.VoteResults.SerializeToString,
+            ),
+            'PropagateBlock': grpc.unary_unary_rpc_method_handler(
+                    servicer.PropagateBlock,
+                    request_deserializer=voting__pb2.BlockMessage.FromString,
+                    response_serializer=voting__pb2.VoteResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -131,6 +149,33 @@ class VotingService(object):
             '/voting.VotingService/QueryResults',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             voting__pb2.VoteResults.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PropagateBlock(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/voting.VotingService/PropagateBlock',
+            voting__pb2.BlockMessage.SerializeToString,
+            voting__pb2.VoteResponse.FromString,
             options,
             channel_credentials,
             insecure,
